@@ -20,7 +20,7 @@ lora = SX127x(device_spi, pins=device_config, parameters=lora_parameters)
 example = 'receiver'
 
 if __name__ == '__main__':
-    if example == 'sender':
-        LoRaSender.send(lora)
     if example == 'receiver':
         LoRaReceiver.receive(lora)
+    elif example == 'sender':
+        LoRaSender.send(lora)

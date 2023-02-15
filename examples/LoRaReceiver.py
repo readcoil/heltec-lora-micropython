@@ -11,6 +11,6 @@ def receive(lora):
             print('something here')
             payload = lora.read_payload()
             print(payload)
-            screen[0] = "pkt: {}".format(payload)
+            screen[0] = f"pkt: {payload}"
             write_screen(oled, screen)
 

@@ -114,14 +114,14 @@ class SX127x:
         re_try = 0
         while init_try and re_try < 5:
             version = self.read_register(REG_VERSION)
-            re_try = re_try + 1
+            re_try += 1
             if version != 0:
                 init_try = False
         #if version != 0x12:
         #    raise Exception('Invalid version.')
 
         if __DEBUG__:
-            print("SX version: {}".format(version))
+            print(f"SX version: {version}")
 
         # put in LoRa and sleep mode
         self.sleep()
@@ -252,7 +252,7 @@ class SX127x:
     def set_frequency(self, frequency):
         self._frequency = frequency
 
-        freq_reg = int(int(int(frequency) << 19) / 32000000) & 0xFFFFFF
+        freq_reg = int(int(frequency) << 19) // 32000000 & 0xFFFFFF
 
         self.write_register(REG_FRF_MSB, (freq_reg & 0xFF0000) >> 16)
         self.write_register(REG_FRF_MID, (freq_reg & 0xFF00) >> 8)
@@ -268,13 +268,13 @@ class SX127x:
         )
 
     def set_signal_bandwidth(self, sbw):
-        bins = (7.8E3, 10.4E3, 15.6E3, 20.8E3, 31.25E3, 41.7E3, 62.5E3, 125E3, 250E3)
-
         bw = 9
 
         if sbw < 10:
             bw = sbw
         else:
+            bins = (7.8E3, 10.4E3, 15.6E3, 20.8E3, 31.25E3, 41.7E3, 62.5E3, 125E3, 250E3)
+
             for i in range(len(bins)):
                 if sbw <= bins[i]:
                     bw = i
@@ -453,7 +453,7 @@ class SX127x:
             packet_length = self.read_register(REG_RX_NB_BYTES)
 
         payload = bytearray()
-        for i in range(packet_length):
+        for _ in range(packet_length):
             payload.append(self.read_register(REG_FIFO))
 
         self.collect_garbage()
@@ -480,7 +480,7 @@ class SX127x:
         return response
 
     def blink_led(self, times = 1, on_seconds = 0.1, off_seconds = 0.1):
-        for i in range(times):
+        for _ in range(times):
             if self._led_status:
                 self._led_status.value(True)
                 sleep(on_seconds)
@@ -490,4 +490,4 @@ class SX127x:
     def collect_garbage(self):
         gc.collect()
         if __DEBUG__:
-            print('[Memory - free: {}   allocated: {}]'.format(gc.mem_free(), gc.mem_alloc()))
+            print(f'[Memory - free: {gc.mem_free()}   allocated: {gc.mem_alloc()}]')

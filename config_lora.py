@@ -5,14 +5,12 @@ import machine
 import ubinascii
 
 def mac2eui(mac):
-    mac = mac[0:6] + 'fffe' + mac[6:]
-    return hex(int(mac[0:2], 16) ^ 2)[2:] + mac[2:]
+    mac = f'{mac[:6]}fffe{mac[6:]}'
+    return hex(int(mac[:2], 16) ^ 2)[2:] + mac[2:]
 
 def get_millis():
-    millisecond = time.ticks_ms()
-    return millisecond
+    return time.ticks_ms()
 
 def get_nodename():
     uuid = ubinascii.hexlify(machine.unique_id()).decode()
-    node_name = "ESP_" + uuid
-    return node_name
+    return f"ESP_{uuid}"
