@@ -16,7 +16,7 @@ def init_oled():
 def write_screen(oled, screen):
 	oled.fill(0)
 	for row, text in enumerate(screen):
-		print("{} - {}".format(row, text))
+		print(f"{row} - {text}")
 		line = 12 * row
 		oled.text(text, 0, line, 1)
 	oled.show()
